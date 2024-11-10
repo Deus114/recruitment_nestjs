@@ -2,16 +2,19 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { IUser } from './user.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @ResponseMessage('Tạo mới người dùng thành công')
   @Post()
-  create(
-    @Body() createUserDto: CreateUserDto
+  async create(
+    @Body() createUserDto: CreateUserDto, @User() user: IUser
   ) {
-    return this.usersService.create(createUserDto);
+    return await this.usersService.create(createUserDto, user);
   }
 
   @Get()
@@ -19,6 +22,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id')
   id: string
@@ -26,13 +30,18 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put()
-  update(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(updateUserDto);
+  @ResponseMessage('Cập nhật người dùng thành công')
+  @Patch()
+  async update(
+    @Body() updateUserDto: UpdateUserDto,
+    @User() user: IUser) {
+    let updatedUser = await this.usersService.update(updateUserDto, user);
+    return updatedUser;
   }
 
+  @ResponseMessage('Xóa người dùng thành công')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  remove(@Param('id') id: string, @User() user: IUser) {
+    return this.usersService.remove(id, user);
   }
 }
