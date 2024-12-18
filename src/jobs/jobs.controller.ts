@@ -16,6 +16,7 @@ export class JobsController {
   }
 
   @Get()
+  @Public()
   @ResponseMessage('Lấy dữ liệu thành công')
   findAll(
     @Query('current') currentPage: string,

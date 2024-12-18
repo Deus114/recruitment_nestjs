@@ -8,11 +8,17 @@ class Company {
 
     @IsNotEmpty()
     name: string;
+
+    @IsNotEmpty()
+    logo: string;
 }
 
 export class CreateJobDto {
     @IsNotEmpty({ message: "Tên không được để trống" })
     name: string;
+
+    @IsNotEmpty({ message: "Địa chỉ không được để trống" })
+    location: string;
 
     @IsNotEmpty({ message: "Skills không được để trống" })
     @IsArray({ message: "Skills có dạng array" })

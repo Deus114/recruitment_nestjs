@@ -12,7 +12,6 @@ import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://lekhaduy0917880045:JZmWyMTWZaOxLTfZ@cluster0.8qddgev.mongodb.net/'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
