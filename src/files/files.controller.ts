@@ -14,9 +14,9 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('fileUpload'))
   uploadFile(@UploadedFile(
     new ParseFilePipeBuilder()
-      .addFileTypeValidator({
-        fileType: /^(jpg|jpeg|image\/jpeg|png|image\/png|gif|txt|pdf|application\/pdf|doc|docx|text\/plain)$/i,
-      })
+      // .addFileTypeValidator({
+      //   fileType: /^(jpg|jpeg|image\/jpeg|png|image\/png|gif|txt|pdf|application\/pdf|doc|docx|text\/plain)$/i,
+      // })
       .addMaxSizeValidator({
         maxSize: 357 * 1024 // kb => MB
       })
