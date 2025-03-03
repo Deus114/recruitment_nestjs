@@ -66,7 +66,6 @@ export class ResumesService {
     let defaultLimit = +limit ? +limit : 10;
 
     const totalItems = (await this.resumeModel.find(filter)).length;
-    console.log(totalItems);
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     const result = await this.resumeModel.find(filter)

@@ -46,7 +46,6 @@ export class RolesService {
     let defaultLimit = +limit ? +limit : 10;
 
     const totalItems = (await this.roleModel.find(filter)).length;
-    console.log(totalItems);
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     const result = await this.roleModel.find(filter)

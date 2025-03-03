@@ -8,12 +8,17 @@ import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './user.interface';
 import aqp from 'api-query-params';
+import { USER_ROLE } from 'src/databases/sample';
+import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
-    private userModel: SoftDeleteModel<UserDocument>
+    private userModel: SoftDeleteModel<UserDocument>,
+
+    @InjectModel(Role.name)
+    private roleModel: SoftDeleteModel<RoleDocument>
   ) { }
 
   getHashPassword = (password: string) => {
@@ -22,25 +27,27 @@ export class UsersService {
     return hash;
   }
 
-  async register(registerUserDto: RegisterUserDto) {
-    const isExist = await this.userModel.findOne({ email: registerUserDto.email });
+  async register(user: RegisterUserDto) {
+    const { name, email, password, age, gender, address } = user;
+    //add logic check email
+    const isExist = await this.userModel.findOne({ email });
     if (isExist) {
-      throw new BadRequestException(`Email: ${registerUserDto.email} đã tồn tại`);
+      throw new BadRequestException(`Email: ${email} đã tồn tại trên hệ thống. Vui lòng sử dụng email khác.`)
     }
-    let hashPassword = this.getHashPassword(registerUserDto.password);
-    let user = await this.userModel.create({
-      email: registerUserDto.email,
+
+    //fetch user role
+    const userRole = await this.roleModel.findOne({ name: USER_ROLE });
+
+    const hashPassword = this.getHashPassword(password);
+    let newRegister = await this.userModel.create({
+      name, email,
       password: hashPassword,
-      name: registerUserDto.name,
-      age: registerUserDto.age,
-      address: registerUserDto.address,
-      gender: registerUserDto.gender,
-      role: registerUserDto.role,
+      age,
+      gender,
+      address,
+      role: userRole?._id
     })
-    return {
-      _id: user._id,
-      createdAt: user.createdAt
-    };
+    return newRegister;
   }
 
   async create(createUserDto: CreateUserDto, i_user: IUser) {
@@ -79,7 +86,6 @@ export class UsersService {
     let defaultLimit = +limit ? +limit : 10;
 
     const totalItems = (await this.userModel.find(filter)).length;
-    console.log(totalItems);
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     const result = await this.userModel.find(filter)
@@ -117,7 +123,10 @@ export class UsersService {
     return this.userModel.findOne({
       email: username
     })
-      .populate({ path: "role", select: { name: 1, permissons: 1 } })
+      .populate({
+        path: "role",
+        select: { name: 1 }
+      });
   }
 
   isValidPassword(password: string, hash: string) {
@@ -139,8 +148,9 @@ export class UsersService {
       return 'Không tìm thấy người dùng.';
 
     const check = await this.userModel.findById(id);
-    if (check.email === "duyle@gmail.com")
-      throw new BadRequestException(`Không thể xóa email admin`);
+    if (check && check.email === "admin@gmail.com") {
+      throw new BadRequestException("Không thể xóa tài khoản admin@gmail.com");
+    }
 
     await this.userModel.updateOne(
       { _id: id },
@@ -165,7 +175,10 @@ export class UsersService {
   findUserByRefreshToken = async (refreshToken: string) => {
     return await this.userModel.findOne(
       { refreshToken }
-    )
+    ).populate({
+      path: "role",
+      select: { name: 1 }
+    });
   }
 
 }
