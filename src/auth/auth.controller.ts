@@ -6,6 +6,7 @@ import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Request as RequestExpress, Response } from 'express';
 import { IUser } from 'src/users/user.interface';
 import { RolesService } from 'src/roles/roles.service';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
     @Public()
     @ResponseMessage('Đăng nhập thành công')
     @UseGuards(LocalAuthGuard)
+    @UseGuards(ThrottlerGuard)
     @Post('/login')
     handleLogin(
         @Request() req,
