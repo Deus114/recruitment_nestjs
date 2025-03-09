@@ -133,11 +133,13 @@ export class UsersService {
     return compareSync(password, hash);
   }
 
-  async update(updateUserDto: UpdateUserDto, user: IUser) {
-    return await this.userModel.updateOne({ _id: updateUserDto._id }, {
+  async update(updateUserDto: UpdateUserDto, user: IUser, _id: string) {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      throw new BadRequestException(`Not found user with id = ${_id}`)
+    return await this.userModel.updateOne({ _id: _id }, {
       ...updateUserDto,
       updatedBy: {
-        _id: user._id,
+        _id: _id,
         email: user.email
       }
     });

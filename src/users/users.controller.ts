@@ -28,18 +28,20 @@ export class UsersController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id')
-  id: string
+  findOne(
+    @Param('id') id: string
   ) {
     return this.usersService.findOne(id);
   }
 
   @ResponseMessage('Cập nhật người dùng thành công')
-  @Patch()
+  @Patch(':id')
   async update(
     @Body() updateUserDto: UpdateUserDto,
-    @User() user: IUser) {
-    let updatedUser = await this.usersService.update(updateUserDto, user);
+    @User() user: IUser,
+    @Param('id') id: string
+  ) {
+    let updatedUser = await this.usersService.update(updateUserDto, user, id);
     return updatedUser;
   }
 
