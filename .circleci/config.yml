@@ -13,7 +13,7 @@
         - checkout
         - run:
             name: Install dependencies
-            command: npm ci
+            command: npm install
         - run:
             name: Build the application
             command: npm run build
