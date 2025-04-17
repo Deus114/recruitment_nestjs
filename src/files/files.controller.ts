@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, UseFilters } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, UseFilters } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public, ResponseMessage } from 'src/decorator/customize';
 import { HttpExceptionFilter } from 'src/core/http-exception.filter';
+import { ApiBody, ApiConsumes, ApiHeader } from '@nestjs/swagger';
 
 @Controller('files')
 export class FilesController {
@@ -11,32 +11,29 @@ export class FilesController {
 
   @Public()
   @Post('upload')
-  @ResponseMessage('Upload single file')
+  @ResponseMessage("Upload Single File")
   @UseInterceptors(FileInterceptor('fileUpload'))
   @UseFilters(new HttpExceptionFilter())
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        fileUpload: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiHeader({
+    name: 'folder_type',
+    required: true,
+    description: 'Custom header',
+  })
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
       fileName: file.filename
     }
-  }
-
-  @Get()
-  findAll() {
-    return this.filesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-    return this.filesService.update(+id, updateFileDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filesService.remove(+id);
   }
 }

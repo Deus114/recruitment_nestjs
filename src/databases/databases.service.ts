@@ -46,7 +46,7 @@ export class DatabasesService implements OnModuleInit {
                 await this.roleModel.insertMany([
                     {
                         name: ADMIN_ROLE,
-                        description: "Admin thì full quyền :v",
+                        description: "Admin thì full quyền",
                         isActive: true,
                         permissions: permissions
                     },
@@ -73,10 +73,10 @@ export class DatabasesService implements OnModuleInit {
                         role: adminRole?._id
                     },
                     {
-                        name: "I'm Hỏi Dân IT",
-                        email: "duy@gmail.com",
+                        name: "I'm Duy",
+                        email: "deus@gmail.com",
                         password: this.userService.getHashPassword(this.configService.get<string>("INIT_PASSWORD")),
-                        age: 26,
+                        age: 22,
                         gender: "MALE",
                         address: "VietNam",
                         role: adminRole?._id
