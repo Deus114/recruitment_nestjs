@@ -54,7 +54,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
     DatabasesModule,
     SubscribersModule,
     MailModule,
-
   ],
   controllers: [AppController],
   providers: [AppService,
