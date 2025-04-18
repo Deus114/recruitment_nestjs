@@ -49,7 +49,7 @@ async function bootstrap() {
   });
 
   // Config helmet
-  app.use(helmet());
+  // app.use(helmet());
 
   // Config swagger
   const config = new DocumentBuilder()
