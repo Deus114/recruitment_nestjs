@@ -49,7 +49,12 @@ async function bootstrap() {
   });
 
   // Config helmet
-  // app.use(helmet());
+  // Tắt CSP để Swagger hoạt động đúng
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
 
   // Config swagger
   const config = new DocumentBuilder()
