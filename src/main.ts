@@ -7,7 +7,6 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -47,14 +46,6 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: ['1']
   });
-
-  // Config helmet
-  // Tắt CSP để Swagger hoạt động đúng
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    }),
-  );
 
   // Config swagger
   const config = new DocumentBuilder()
