@@ -16,7 +16,7 @@ export class RolesService {
   ) { }
 
   async create(createRoleDto: CreateRoleDto, user: IUser) {
-    let { name, description, isActive, permission } = createRoleDto;
+    let { name, description, isActive, permissions } = createRoleDto;
     let check = await this.roleModel.findOne({ name: name });
 
     if (check) {
@@ -24,7 +24,7 @@ export class RolesService {
     }
 
     let res = await this.roleModel.create({
-      name, description, isActive, permission,
+      name, description, isActive, permissions,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -84,10 +84,10 @@ export class RolesService {
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new BadRequestException('Không tìm thấy Role.');
 
-    let { name, description, isActive, permission } = updateRoleDto;
+    let { name, description, isActive, permissions } = updateRoleDto;
 
     let res = await this.roleModel.updateOne({ _id: id }, {
-      name, description, isActive, permission
+      name, description, isActive, permissions
     });
 
     return res;

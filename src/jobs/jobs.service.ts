@@ -15,6 +15,11 @@ export class JobsService {
     private jobModel: SoftDeleteModel<JobDocument>
   ) { }
 
+  getJobDashboard = async () => {
+    const count = await this.jobModel.countDocuments({ isDeleted: false });;
+    return count;
+  }
+
   async create(createJobDto: CreateJobDto, user: IUser) {
     let res = await this.jobModel.create({
       ...createJobDto

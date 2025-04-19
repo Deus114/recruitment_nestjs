@@ -20,5 +20,5 @@ export class CreateRoleDto {
     @IsNotEmpty({ message: 'permission không được để trống', })
     @IsMongoId({ each: true, message: 'Mỗi permission là mongo object Id' })
     @IsArray({ message: "permission có dạng array" })
-    permission: mongoose.Schema.Types.ObjectId[];
+    permissions: mongoose.Schema.Types.ObjectId[];
 }

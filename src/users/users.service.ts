@@ -21,6 +21,11 @@ export class UsersService {
     private roleModel: SoftDeleteModel<RoleDocument>
   ) { }
 
+  getUserDashboard = async () => {
+    const count = await this.userModel.countDocuments({ isDeleted: false });;
+    return count;
+  }
+
   getHashPassword = (password: string) => {
     var salt = genSaltSync(10);
     var hash = hashSync(password, salt);

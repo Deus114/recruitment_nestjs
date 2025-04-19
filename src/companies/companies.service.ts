@@ -15,6 +15,11 @@ export class CompaniesService {
     private companyModel: SoftDeleteModel<CompanyDocument>
   ) { }
 
+  getCompanyDashboard = async () => {
+    const count = await this.companyModel.countDocuments({ isDeleted: false });;
+    return count;
+  }
+
   create(createCompanyDto: CreateCompanyDto, user: IUser) {
     return this.companyModel.create({
       ...createCompanyDto,
