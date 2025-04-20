@@ -8,12 +8,14 @@ import { IUser } from 'src/users/user.interface';
 import { RolesService } from 'src/roles/roles.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { ApiBody } from '@nestjs/swagger';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private rolesService: RolesService
+        private rolesService: RolesService,
+        private usersService: UsersService
     ) { }
 
     @Public()
@@ -44,6 +46,8 @@ export class AuthController {
     async handleGetAccount(@User() user: IUser) {
         const temp = await this.rolesService.findOne(user.role._id) as any;
         user.permissions = temp.permissions;
+        const temp1 = await this.usersService.findOne(user._id) as any;
+        user.company = temp1.company;
         return { user };
     }
 

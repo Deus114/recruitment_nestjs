@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export interface IUser {
     _id: string;
     name: string;
@@ -12,4 +14,8 @@ export interface IUser {
         apiPath: string;
         module: string;
     }[]
+    company: {
+        _id: mongoose.Schema.Types.ObjectId,
+        name: string,
+    };
 }

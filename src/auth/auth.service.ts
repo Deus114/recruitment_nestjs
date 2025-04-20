@@ -37,7 +37,7 @@ export class AuthService {
     }
 
     async login(user: IUser, response: Response) {
-        const { _id, name, email, role, permissions } = user;
+        const { _id, name, email, role, permissions, company } = user;
         const payload = {
             sub: "token login",
             iss: "from server",
@@ -45,7 +45,8 @@ export class AuthService {
             name,
             email,
             role,
-            permissions
+            permissions,
+            company
         };
 
         let refresh_token = this.createRefreshToken(payload);
@@ -62,7 +63,8 @@ export class AuthService {
             name,
             email,
             role,
-            permissions
+            permissions,
+            company
         };
 
     }
@@ -87,7 +89,7 @@ export class AuthService {
             )
             let user = await this.usersService.findUserByRefreshToken(refreshToken);
             if (user) {
-                const { _id, name, email, role } = user;
+                const { _id, name, email, role, company } = user;
                 const payload = {
                     sub: "token login",
                     iss: "from server",
@@ -113,7 +115,8 @@ export class AuthService {
                     name,
                     email,
                     role,
-                    permissions: temp?.permissions ?? []
+                    permissions: temp?.permissions ?? [],
+                    company
                 };
             } else {
                 throw new BadRequestException(`Refresh token không hợp lệ, vui lòng đăng nhập`);
