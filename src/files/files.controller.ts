@@ -10,7 +10,7 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) { }
 
   @Public()
-  @Post('upload')
+  @Post('/upload')
   @ResponseMessage("Upload Single File")
   @UseInterceptors(FileInterceptor('fileUpload'))
   @UseFilters(new HttpExceptionFilter())
