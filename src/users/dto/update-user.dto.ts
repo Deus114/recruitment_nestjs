@@ -53,3 +53,27 @@ export class UpdateUserDto {
     @IsNotEmpty({ message: '_id không được để trống', })
     _id: string;
 }
+
+export class UpdateUserInfoDto {
+    @ApiProperty()
+    @IsNotEmpty({ message: 'Tên không được để trống' })
+    name: string;
+
+    @ApiProperty()
+    @IsNotEmpty({ message: '_id không được để trống', })
+    _id: string;
+}
+
+export class ChangePassWorDto {
+    @ApiProperty()
+    @IsNotEmpty({ message: 'Email không được để trống', })
+    email: string;
+
+    @ApiProperty()
+    @IsNotEmpty({ message: 'Mật khẩu cũ không được để trống', })
+    oldpass: string;
+
+    @ApiProperty()
+    @IsNotEmpty({ message: 'Mật khẩu mới không được để trống', })
+    newpass: string;
+}

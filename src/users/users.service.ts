@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePassWorDto, UpdateUserDto, UpdateUserInfoDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
@@ -150,6 +150,16 @@ export class UsersService {
     });
   }
 
+  async updateInfo(updateUserDto: UpdateUserInfoDto, user: IUser) {
+    return await this.userModel.updateOne({ _id: updateUserDto._id }, {
+      name: updateUserDto.name,
+      updatedBy: {
+        _id: user._id,
+        email: user.email
+      }
+    });
+  }
+
   async remove(id: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(id))
       return 'Không tìm thấy người dùng.';
@@ -186,6 +196,27 @@ export class UsersService {
       path: "role",
       select: { name: 1 }
     });
+  }
+
+  changePassword = async (changePasswordDto: ChangePassWorDto) => {
+    const { email, oldpass, newpass } = changePasswordDto;
+    const user = await this.findOneByUserName(email);
+    if (user) {
+      let isValidPassword = this.isValidPassword(oldpass, user.password)
+      if (isValidPassword) {
+        let updatePass = this.getHashPassword(newpass);
+        return await this.userModel.updateOne({ _id: user._id }, {
+          password: updatePass,
+          accessToken: "",
+          updatedBy: {
+            _id: user._id,
+            email: user.email
+          }
+        })
+      } else {
+        throw new BadRequestException(`Mật khẩu không đúng!`)
+      }
+    } else throw new BadRequestException(`Không tìm thấy email tương ứng!`)
   }
 
 }
