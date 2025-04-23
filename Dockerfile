@@ -26,8 +26,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
-# Mở cổng 8000 (thay đổi cổng từ 3000 thành 8000)
+# Mở cổng 8001
 EXPOSE 8001
 
-# Chạy ứng dụng trên cổng 8000
-CMD ["node", "dist/main"]
+# Chạy ứng dụng trên cổng 8001
+CMD ["node", "dist/main", "--port", "8001"]
