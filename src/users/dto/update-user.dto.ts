@@ -1,4 +1,4 @@
-import { IsEmail, IsMongoId, IsNotEmpty, IsObject, ValidateNested } from 'class-validator';
+import { IsEmail, IsMongoId, IsNotEmpty, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import mongoose from 'mongoose';
@@ -44,6 +44,7 @@ export class UpdateUserDto {
     role: string;
 
     @ApiProperty()
+    @IsOptional()
     @IsObject()
     @ValidateNested()
     @Type(() => Company)
